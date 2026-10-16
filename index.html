@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl" data-theme="parchment">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="al_witify">
+<meta name="theme-color" content="#f3ead8">
+<title>al_witify</title>
+<link rel="manifest" id="mf">
+<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 180 180'%3E%3Crect width='180' height='180' fill='%23f3ead8'/%3E%3Ctext x='90' y='120' font-size='96' text-anchor='middle' fill='%237a4b2a' font-family='serif'%3Eaw%3C/text%3E%3C/svg%3E">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Aref+Ruqaa:wght@700&family=Tajawal:wght@400;500;700&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<style>
+:root{--bg:#f3ead8;--panel:#faf4e6;--ink:#3b3226;--mute:#7d705c;--line:#dccfb4;--accent:#8a5a34;--b1:#8a5a34;--b2:#c08a4e;--ok:#4f7a4a;--bad:#a2483d}
+[data-theme=sand]{--bg:#e6d3ae;--panel:#efe0c0;--ink:#3a2e1c;--mute:#6f5d40;--line:#cdb88c;--accent:#7a5a22;--b1:#6b4a1c;--b2:#b5813a}
+[data-theme=nordic]{--bg:#2b2a28;--panel:#34322f;--ink:#e4dccb;--mute:#a79f8e;--line:#47443f;--accent:#c9b58a;--b1:#c9b58a;--b2:#e6dcc3;--ok:#8fb287;--bad:#d08a7e}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%;margin:0;overscroll-behavior-y:contain;background:var(--bg);color:var(--ink);font-family:Tajawal,system-ui,sans-serif;font-size:17px;line-height:1.8}
+body{display:flex;flex-direction:column;padding:env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+header{display:flex;align-items:center;justify-content:center;position:relative;height:56px;flex:none;border-bottom:1px solid var(--line);background:var(--panel)}
+#menu{position:absolute;right:14px;top:8px;width:42px;height:40px;border:1px solid var(--line);background:transparent;color:var(--ink);border-radius:10px;font-size:22px;cursor:pointer}
+.brand{font-family:'Aref Ruqaa',Georgia,serif;font-size:32px;letter-spacing:.5px;direction:ltr;background:linear-gradient(100deg,var(--b1),var(--b2));-webkit-background-clip:text;background-clip:text;color:transparent;transition:.4s}
+main{flex:1;display:grid;grid-template-columns:70fr 30fr;gap:12px;padding:12px;min-height:0}
+.pane{background:var(--panel);border:1px solid var(--line);border-radius:14px;overflow-y:auto;overscroll-behavior-y:contain;padding:16px 20px;min-height:0}
+#side{padding:12px;display:flex;flex-direction:column;gap:12px}
+.u{background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 14px;margin:14px 0 6px;font-weight:500}
+.ai :is(table){border-collapse:collapse;width:100%;display:block;overflow-x:auto}
+.ai th,.ai td{border:1px solid var(--line);padding:6px 10px}.ai th{background:var(--bg)}
+.ai pre{background:var(--bg);padding:10px;border-radius:8px;overflow-x:auto;direction:ltr}
+.ai hr{border:0;border-top:1px dashed var(--mute);margin:26px 0;opacity:.6}
+.ai h1,.ai h2,.ai h3{color:var(--accent);line-height:1.4}
+.card{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:var(--bg)}
+.card img{width:100%;display:block;touch-action:pinch-zoom}
+.card p{margin:0;padding:8px 12px;font-size:14px;line-height:1.6;color:var(--mute)}
+.card b{display:block;color:var(--ink);font-size:15px}
+.empty{color:var(--mute);text-align:center;margin-top:30px;font-size:15px}
+footer{flex:none;padding:8px 12px 12px;background:var(--panel);border-top:1px solid var(--line)}
+#keybar{display:none;gap:8px;margin-bottom:8px}
+#chips{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:6px}
+.chip{background:var(--bg);border:1px solid var(--line);border-radius:20px;padding:0 10px;font-size:13px}
+.row{display:flex;gap:8px;align-items:flex-end}
+textarea,input[type=password],input[type=text]{flex:1;font:inherit;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:8px 12px;resize:none;outline:none}
+textarea{max-height:140px}
+.btn{font:inherit;cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:12px;min-width:44px;height:44px;padding:0 12px}
+.btn.p{background:var(--accent);color:var(--panel);border-color:var(--accent)}
+#drawer{position:fixed;top:0;bottom:0;right:0;width:min(360px,88vw);background:var(--panel);border-left:1px solid var(--line);transform:translateX(105%);transition:transform .25s;z-index:30;padding:calc(env(safe-area-inset-top) + 14px) 16px 16px;overflow-y:auto;display:flex;flex-direction:column;gap:12px}
+#drawer.open{transform:none;box-shadow:-8px 0 30px #0004}
+#scrim{position:fixed;inset:0;background:#0005;display:none;z-index:20}#scrim.open{display:block}
+.themes{display:flex;gap:6px}.themes .btn{flex:1;font-size:13px;padding:0 4px}
+.themes .btn.on{outline:2px solid var(--accent)}
+h4{margin:6px 0 0;color:var(--mute);font-size:14px}
+.sess{display:flex;gap:6px}.sess .btn:first-child{flex:1;text-align:right;height:auto;min-height:40px;font-size:14px;line-height:1.4;padding:6px 10px}.sess.on .btn:first-child{border-color:var(--accent)}
+#pop{position:fixed;z-index:40;display:none;gap:4px;background:var(--ink);border-radius:12px;padding:6px}
+#pop button{font:inherit;font-size:14px;border:0;background:transparent;color:var(--bg);padding:6px 10px;border-radius:8px}
+.quiz{border:1px solid var(--line);border-radius:12px;padding:10px 14px;margin:12px 0;background:var(--bg)}
+.opt{display:block;width:100%;text-align:right;font:inherit;margin:6px 0;padding:8px 12px;border:1px solid var(--line);border-radius:10px;background:var(--panel);color:var(--ink);cursor:pointer}
+.opt.ok{background:var(--ok);color:#fff}.opt.bad{background:var(--bad);color:#fff}
+.why{display:none;font-size:15px;color:var(--mute)}
+.err{color:var(--bad)}.spin{color:var(--mute)}
+@media(max-width:700px){main{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<header><button id="menu" aria-label="القائمة">☰</button><div class="brand">al_witify</div></header>
+<main>
+  <section class="pane" id="main"><div class="empty">اسأل عن أي درس أو أرفق ملفاً لتبدأ.</div></section>
+  <aside class="pane" id="side"><div class="empty">ستظهر هنا المخططات العلمية.</div></aside>
+</main>
+<footer>
+  <div id="keybar"><input type="password" id="keyin" placeholder="الصق مفتاح Gemini API هنا" dir="ltr"><button class="btn p" id="keysave">حفظ</button></div>
+  <div id="chips"></div>
+  <div class="row">
+    <button class="btn" id="att" title="مرفق">📎</button>
+    <input type="file" id="file" hidden multiple accept=".pdf,.txt,.md,.csv,.png,.jpg,.jpeg,.webp">
+    <textarea id="q" rows="1" placeholder="اكتب سؤالك…"></textarea>
+    <button class="btn" id="quiz" title="اختبرني">📝</button>
+    <button class="btn p" id="send">إرسال</button>
+  </div>
+</footer>
+<div id="scrim"></div>
+<nav id="drawer">
+  <button class="btn p" id="newchat">＋ محادثة جديدة</button>
+  <h4>الثيم</h4>
+  <div class="themes">
+    <button class="btn" data-t="parchment">كريمي ورقي</button>
+    <button class="btn" data-t="sand">رمل دافئ</button>
+    <button class="btn" data-t="nordic">داكن ناعم</button>
+  </div>
+  <button class="btn" id="pdf">⬇ تصدير الدرس PDF</button>
+  <h4>مفتاح Gemini API</h4>
+  <div class="row"><input type="password" id="keyset" dir="ltr" placeholder="••••••••"><button class="btn" id="keyupd">تحديث</button></div>
+  <h4>السجل</h4>
+  <div id="hist"></div>
+</nav>
+<div id="pop"><button data-a="اشرح هذا الجزء بتفصيل أكثر:">اشرح أكثر 💡</button><button data-a="بسّط هذا المفهوم بلغة سهلة ومثال:">بسط المفهوم 🧩</button><button data-a="ترجم النص التالي بين العربية والإنجليزية مع المصطلحات الطبية:">ترجم 🌐</button></div>
+
+<script>
+const MODEL='gemini-2.5-flash'; // غيّر الاسم هنا عند الحاجة
+const KEY_ID='gemini_pwa_key', S_ID='al_witify_sessions', T_ID='al_witify_theme';
+const $=s=>document.querySelector(s);
+const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}}};
+let sessions=[];try{sessions=JSON.parse(ls.get(S_ID)||'[]')}catch(e){}
+let cur=null, pending=[], busy=false;
+
+// manifest (no service worker possible in a single file)
+$('#mf').href=URL.createObjectURL(new Blob([JSON.stringify({name:'al_witify',short_name:'al_witify',start_url:'.',display:'standalone',orientation:'landscape',background_color:'#f3ead8',theme_color:'#f3ead8',lang:'ar',dir:'rtl'})],{type:'application/manifest+json'}));
+if(window.pdfjsLib)pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js';
+
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const md=t=>window.marked?marked.parse(t):esc(t).replace(/\n/g,'<br>');
+const save=()=>{cur.updated=Date.now();if(!ls.set(S_ID,JSON.stringify(sessions)))toast('الذاكرة ممتلئة: تعذّر حفظ آخر تحديث')};
+function toast(m){const d=document.createElement('div');d.className='err';d.textContent=m;$('#chips').append(d);setTimeout(()=>d.remove(),5000)}
+
+// theme
+function setTheme(t){document.documentElement.dataset.theme=t;ls.set(T_ID,t);document.querySelectorAll('.themes .btn').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$('meta[name=theme-color]').content=getComputedStyle(document.documentElement).getPropertyValue('--bg').trim()}
+document.querySelectorAll('.themes .btn').forEach(b=>b.onclick=()=>setTheme(b.dataset.t));
+setTheme(ls.get(T_ID)||'parchment');
+
+// drawer
+const drawer=(o)=>{$('#drawer').classList.toggle('open',o);$('#scrim').classList.toggle('open',o)};
+$('#menu').onclick=()=>drawer(true);$('#scrim').onclick=()=>drawer(false);
+
+// key
+function keyUI(){$('#keybar').style.display=ls.get(KEY_ID)?'none':'flex'}
+$('#keysave').onclick=()=>{const v=$('#keyin').value.trim();if(v){ls.set(KEY_ID,v);$('#keyin').value='';keyUI()}};
+$('#keyupd').onclick=()=>{const v=$('#keyset').value.trim();if(v){ls.set(KEY_ID,v);$('#keyset').value='';keyUI();toast('تم تحديث المفتاح')}};
+keyUI();
+
+// sessions
+function newSession(){cur={id:Date.now(),title:'محادثة جديدة',msgs:[],updated:Date.now()};sessions.unshift(cur);pending=[];render();hist()}
+function open(id){cur=sessions.find(s=>s.id===id);pending=[];render();hist();drawer(false)}
+function hist(){const h=$('#hist');h.innerHTML='';sessions.slice().sort((a,b)=>b.updated-a.updated).forEach(s=>{const d=document.createElement('div');d.className='sess'+(s===cur?' on':'');d.innerHTML=`<button class="btn">${esc(s.title)}</button><button class="btn" aria-label="حذف">🗑</button>`;d.children[0].onclick=()=>open(s.id);d.children[1].onclick=()=>{if(!confirm('حذف هذه المحادثة؟'))return;sessions=sessions.filter(x=>x!==s);ls.set(S_ID,JSON.stringify(sessions));if(s===cur){sessions.length?cur=sessions[0]:newSession();render()}hist()};h.append(d)})}
+$('#newchat').onclick=()=>{newSession();drawer(false)};
+
+function render(){
+  const m=$('#main'),s=$('#side');m.innerHTML='';s.innerHTML='';
+  if(!cur.msgs.length){m.innerHTML='<div class="empty">اسأل عن أي درس أو أرفق ملفاً لتبدأ.</div>';s.innerHTML='<div class="empty">ستظهر هنا المخططات العلمية.</div>'}
+  cur.msgs.forEach(x=>{
+    if(x.role==='user'){const d=document.createElement('div');d.className='u';d.textContent=x.text+(x.files&&x.files.length?'  📎 '+x.files.join('، '):'');m.append(d)}
+    else{const d=document.createElement('div');d.className='ai';d.innerHTML=md(x.text);m.append(d);(x.imgs||[]).forEach(i=>s.append(card(i)))}
+  });
+  m.scrollTop=m.scrollHeight;
+}
+function card(i){const c=document.createElement('div');c.className='card';c.innerHTML=`<img loading="lazy" src="${esc(i.src)}" alt=""><p><b>${esc(i.title)}</b>${esc(i.desc||'')}</p>`;return c}
+
+// attachments
+$('#att').onclick=()=>$('#file').click();
+$('#file').onchange=async e=>{
+  for(const f of e.target.files){
+    try{
+      const n=f.name.toLowerCase();
+      if(n.endsWith('.pdf')){const pdf=await pdfjsLib.getDocument({data:await f.arrayBuffer()}).promise;let t='';for(let i=1;i<=pdf.numPages;i++){const p=await (await pdf.getPage(i)).getTextContent();t+=p.items.map(x=>x.str).join(' ')+'\n'}pending.push({name:f.name,text:t.slice(0,60000)})}
+      else if(f.type.startsWith('image/')){const b64=await new Promise((r,j)=>{const fr=new FileReader();fr.onload=()=>r(fr.result.split(',')[1]);fr.onerror=j;fr.readAsDataURL(f)});pending.push({name:f.name,mime:f.type,b64})}
+      else pending.push({name:f.name,text:(await f.text()).slice(0,60000)});
+    }catch(err){toast('تعذّرت قراءة '+f.name)}
+  }
+  e.target.value='';chips();
+};
+function chips(){$('#chips').innerHTML=pending.map((p,i)=>`<span class="chip">${esc(p.name)} <a href="#" data-i="${i}" style="text-decoration:none">✕</a></span>`).join('');document.querySelectorAll('#chips a').forEach(a=>a.onclick=e=>{e.preventDefault();pending.splice(+a.dataset.i,1);chips()})}
+
+// gemini
+async function gem(contents,sys,json){
+  const key=ls.get(KEY_ID);if(!key)throw new Error('أدخل مفتاح Gemini API أولاً.');
+  const body={contents,systemInstruction:{parts:[{text:sys}]}};if(json)body.generationConfig={responseMimeType:'application/json'};
+  let r;try{r=await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${MODEL}:generateContent?key=${encodeURIComponent(key)}`,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)})}catch(e){throw new Error('تعذّر الاتصال بالشبكة.')}
+  const d=await r.json().catch(()=>({}));
+  if(!r.ok){const m=(d.error&&d.error.message)||r.status;throw new Error(r.status===400||r.status===403?'المفتاح غير صالح أو غير مصرّح: '+m:r.status===429?'تجاوزت حد الطلبات، حاول بعد قليل.':r.status===404?'النموذج '+MODEL+' غير متاح: '+m:'خطأ من الخادم: '+m)}
+  const t=d.candidates&&d.candidates[0]&&d.candidates[0].content&&d.candidates[0].content.parts;
+  if(!t)throw new Error('لم يصل رد (ربما حُجب المحتوى).');
+  return t.map(p=>p.text||'').join('');
+}
+const SYS='أنت مدرّس طب بارع لطالب طب عربي. اشرح بالعربية مع إبقاء المصطلحات الطبية بالإنجليزية بين قوسين. استخدم Markdown وجداول عند الحاجة. إذا تضمن السؤال عدة أسئلة فافصل بين كل جواب وآخر بسطر --- . في آخر سطر من ردك اكتب بالضبط: IMG: ثم 2-4 كلمات إنجليزية للبحث عن مخطط علمي مناسب.';
+
+async function wiki(q){
+  const u='https://commons.wikimedia.org/w/api.php?action=query&format=json&origin=*&generator=search&gsrnamespace=6&gsrlimit=4&gsrsearch='+encodeURIComponent(q+' diagram')+'&prop=imageinfo&iiprop=url|extmetadata&iiurlwidth=600';
+  try{const d=await (await fetch(u)).json();return Object.values((d.query&&d.query.pages)||{}).map(p=>{const i=p.imageinfo&&p.imageinfo[0];if(!i||!/\.(png|jpe?g|svg|webp)$/i.test(p.title))return null;const x=i.extmetadata||{};return{src:i.thumburl||i.url,title:p.title.replace(/^File:/,'').replace(/\.\w+$/,'').replace(/_/g,' '),desc:(x.ImageDescription&&x.ImageDescription.value||'').replace(/<[^>]*>/g,'').slice(0,140)}}).filter(Boolean).slice(0,4)}catch(e){return[]}
+}
+
+async function ask(text,files){
+  if(busy)return;text=text.trim();if(!text&&!files.length)return;
+  busy=true;$('#send').disabled=true;
+  const um={role:'user',text:text||'حلّل المرفقات',files:files.map(f=>f.name),att:files.filter(f=>f.text).map(f=>f.name+':\n'+f.text.slice(0,20000))};
+  cur.msgs.push(um);if(cur.msgs.length===1)cur.title=um.text.slice(0,40);
+  const loading=document.createElement('div');loading.className='spin';loading.textContent='جارٍ التحضير…';render();$('#main').append(loading);$('#main').scrollTop=1e9;
+  try{
+    const contents=cur.msgs.slice(0,-1).map(m=>({role:m.role==='user'?'user':'model',parts:[{text:m.role==='user'?m.text+(m.att&&m.att.length?'\n\n'+m.att.join('\n\n'):''):m.text}]}));
+    const parts=[{text:um.text+files.filter(f=>f.text).map(f=>'\n\n['+f.name+']\n'+f.text).join('')}];
+    files.filter(f=>f.b64).forEach(f=>parts.push({inline_data:{mime_type:f.mime,data:f.b64}}));
+    contents.push({role:'user',parts});
+    let out=await gem(contents,SYS);
+    let kw='';out=out.replace(/\n?\s*IMG:\s*(.+)\s*$/i,(_,k)=>{kw=k.trim();return''});
+    const msg={role:'model',text:out,imgs:[]};cur.msgs.push(msg);render();
+    if(kw){msg.imgs=await wiki(kw);}
+    save();render();hist();
+  }catch(e){cur.msgs.pop();const l=$('#main');render();const d=document.createElement('div');d.className='err';d.textContent='⚠ '+e.message;l.append(d);$('#q').value=um.text;}
+  finally{busy=false;$('#send').disabled=false}
+}
+$('#send').onclick=()=>{const t=$('#q').value;const f=pending;pending=[];chips();$('#q').value='';autosize();ask(t,f)};
+$('#q').addEventListener('keydown',e=>{if(e.key==='Enter'&&!e.shiftKey&&!e.isComposing){e.preventDefault();$('#send').click()}});
+const autosize=()=>{const q=$('#q');q.style.height='auto';q.style.height=Math.min(q.scrollHeight,140)+'px'};$('#q').oninput=autosize;
+
+// quiz
+$('#quiz').onclick=async()=>{
+  const last=[...cur.msgs].reverse().find(m=>m.role==='model');if(!last){toast('اطلب شرحاً أولاً');return}
+  if(busy)return;busy=true;const l=document.createElement('div');l.className='spin';l.textContent='جارٍ توليد الأسئلة…';$('#main').append(l);$('#main').scrollTop=1e9;
+  try{
+    const r=await gem([{role:'user',parts:[{text:'ولّد 3 أسئلة اختيار من متعدد بالعربية من هذا الشرح فقط:\n'+last.text}]}],'أعد JSON فقط: مصفوفة من 3 عناصر {"q":"","options":["","","",""],"answer":0,"why":""} حيث answer فهرس الإجابة الصحيحة.',true);
+    const qs=JSON.parse(r.replace(/```json|```/g,'').trim());
+    l.remove();qs.forEach(q=>{const d=document.createElement('div');d.className='quiz';d.innerHTML=`<b>${esc(q.q)}</b>`;q.options.forEach((o,i)=>{const b=document.createElement('button');b.className='opt';b.textContent=o;b.onclick=()=>{d.querySelectorAll('.opt').forEach((x,j)=>{x.disabled=true;if(j===q.answer)x.classList.add('ok');else if(x===b)x.classList.add('bad')});d.querySelector('.why').style.display='block'};d.append(b)});const w=document.createElement('div');w.className='why';w.textContent=q.why;d.append(w);$('#main').append(d)});$('#main').scrollTop=1e9;
+  }catch(e){l.className='err';l.textContent='⚠ '+e.message}
+  finally{busy=false}
+};
+
+// selection popup
+const pop=$('#pop');let selText='';
+function checkSel(){setTimeout(()=>{const s=getSelection();const t=s&&s.toString().trim();if(!t||!s.rangeCount||!$('#main').contains(s.anchorNode)){pop.style.display='none';return}selText=t;const r=s.getRangeAt(0).getBoundingClientRect();pop.style.display='flex';const w=pop.offsetWidth;pop.style.top=Math.max(8,r.top-52)+'px';pop.style.left=Math.min(innerWidth-w-8,Math.max(8,r.left+r.width/2-w/2))+'px'},50)}
+document.addEventListener('mouseup',checkSel);document.addEventListener('touchend',checkSel);document.addEventListener('selectionchange',()=>{if(!getSelection().toString().trim())pop.style.display='none'});
+pop.querySelectorAll('button').forEach(b=>{b.addEventListener('mousedown',e=>e.preventDefault());b.onclick=()=>{const t=b.dataset.a+'\n"'+selText+'"';pop.style.display='none';getSelection().removeAllRanges();ask(t,[])}});
+
+// pdf export
+$('#pdf').onclick=async()=>{
+  if(!cur.msgs.length){toast('لا يوجد درس لتصديره');return}
+  drawer(false);
+  const w=document.createElement('div');w.dir='rtl';w.style.cssText='padding:20px;font-family:Tajawal,sans-serif;color:#222;background:#fff;line-height:1.8';
+  w.innerHTML='<h2>'+esc(cur.title)+'</h2>'+cur.msgs.map(m=>m.role==='user'?'<p><b>'+esc(m.text)+'</b></p>':'<div>'+md(m.text)+'</div>'+(m.imgs||[]).map(i=>`<figure><img src="${esc(i.src)}" crossorigin="anonymous" style="max-width:60%"><figcaption>${esc(i.title)}</figcaption></figure>`).join('')).join('');
+  try{await html2pdf().set({margin:10,filename:'al_witify_'+cur.id+'.pdf',image:{type:'jpeg',quality:.9},html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4'}}).from(w).save()}catch(e){toast('فشل التصدير: '+e.message)}
+};
+
+sessions.length?cur=sessions.sort((a,b)=>b.updated-a.updated)[0]:newSession();
+render();hist();
+</script>
+</body>
+</html>
