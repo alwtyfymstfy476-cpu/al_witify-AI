@@ -101,8 +101,8 @@ h4{margin:6px 0 0;color:var(--mute);font-size:14px}
 <div id="pop"><button data-a="اشرح هذا الجزء بتفصيل أكثر:">اشرح أكثر 💡</button><button data-a="بسّط هذا المفهوم بلغة سهلة ومثال:">بسط المفهوم 🧩</button><button data-a="ترجم النص التالي بين العربية والإنجليزية مع المصطلحات الطبية:">ترجم 🌐</button></div>
 
 <script>
-const MODELS=['gemini-1.5-flash', 'gemini-2.5-flash'];
-const KEY_ID='gemini_pwa_key', S_ID='al_witify_sessions', T_ID='al_witify_theme';
+const MODELS=['gemini-1.5-flash', 'gemini-3.8-flash'];
+غconst KEY_ID='gemini_pwa_key', S_ID='al_witify_sessions', T_ID='al_witify_theme';
 const $=s=>document.querySelector(s);
 const ls={get:k=>{try{return localStorage.getItem(k)}catch(e){return null}},set:(k,v)=>{try{localStorage.setItem(k,v);return true}catch(e){return false}}};
 let sessions=[];try{sessions=JSON.parse(ls.get(S_ID)||'[]')}catch(e){}
